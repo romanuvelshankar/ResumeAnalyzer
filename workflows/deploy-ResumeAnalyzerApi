@@ -1,0 +1,56 @@
+name: Deploy Function App
+
+on:
+push:
+branches:
+- master
+
+permissions:
+id-token: write
+contents: read
+
+env:
+DOTNET_VERSION: '10.0.x'
+FUNCTION_PROJECT: 'src/ResumeAnalyzer.Api'
+FUNCTION_APP_NAME: 'azfun-resumeanalyzerapi'
+
+jobs:
+
+deploy:
+
+```
+runs-on: windows
+
+environment:
+  name: Production
+
+steps:
+
+  - name: Checkout
+    uses: actions/checkout@v4
+
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: ${{ env.DOTNET_VERSION }}
+
+  - name: Publish Function
+    run: |
+      dotnet publish \
+        ${{ env.FUNCTION_PROJECT }} \
+        --configuration Release \
+        --output publish
+
+  - name: Azure Login (OIDC)
+    uses: azure/login@v2
+    with:
+      client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  - name: Deploy Azure Function
+    uses: Azure/functions-action@v1
+    with:
+      app-name: ${{ env.FUNCTION_APP_NAME }}
+      package: publish
+```
