@@ -1,4 +1,4 @@
-name: Build
+name: Build - Resume Analyzer Api
 
 on:
 pull_request:
@@ -7,7 +7,6 @@ branches:
 
 env:
 DOTNET_VERSION: '9.0.x'
-FUNCTION_PROJECT: 'src/ResumeAnalyzer.Api'
 
 jobs:
 
@@ -17,23 +16,17 @@ runs-on: ubuntu-latest
 
 steps:
 
-  - name: Checkout
-    uses: actions/checkout@v4
+  - uses: actions/checkout@v4
 
-  - name: Setup .NET
-    uses: actions/setup-dotnet@v4
+  - uses: actions/setup-dotnet@v4
     with:
       dotnet-version: ${{ env.DOTNET_VERSION }}
 
   - name: Restore
-    run: |
-      dotnet restore
+    run: dotnet restore
 
   - name: Build
-    run: |
-      dotnet build --configuration Release --no-restore
+    run: dotnet build --configuration Release --no-restore
 
   - name: Test
-    run: |
-      dotnet test --configuration Release --no-build
-```
+    run: dotnet test --configuration Release --no-build
