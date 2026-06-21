@@ -1,0 +1,150 @@
+﻿.hero-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: linear-gradient( 135deg, #f8fbff 0%, #eef5ff 100%);
+}
+
+.hero-card {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,.06), 0 20px 60px rgba(0,0,0,.08);
+}
+
+.hero-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.hero-header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-header p {
+    color: #6c757d;
+    font-size: 1.15rem;
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+.upload-container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.upload-box {
+    border: 2px dashed #0d6efd;
+    border-radius: 18px;
+    background: #f8fbff;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all .25s ease;
+}
+
+    .upload-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(13,110,253,.10);
+    }
+
+.upload-icon {
+    font-size: 3rem;
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
+
+.upload-box h4 {
+    font-weight: 600;
+}
+
+.upload-box p {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.upload-input {
+    width: 100%;
+}
+
+.status-message {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    background: #eef6ff;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.feature-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.feature-card {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 1.75rem;
+    text-align: center;
+    transition: all .25s ease;
+}
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    }
+
+    .feature-card i {
+        font-size: 2.5rem;
+        color: #0d6efd;
+    }
+
+    .feature-card h5 {
+        margin-top: 1rem;
+        margin-bottom: .75rem;
+        font-weight: 600;
+    }
+
+    .feature-card p {
+        color: #6c757d;
+        font-size: .95rem;
+    }
+
+@media (max-width: 768px) {
+
+    .hero-card {
+        padding: 2rem;
+    }
+
+    .hero-header h1 {
+        font-size: 2rem;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}

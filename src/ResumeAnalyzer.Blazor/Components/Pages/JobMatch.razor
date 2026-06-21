@@ -1,0 +1,138 @@
+﻿@page "/jobmatch/{ResumeId}"
+
+@using ResumeAnalyzer.Blazor.Services
+@using ResumeAnalyzer.Shared.Models
+
+@inject ResumeApiClient Api
+
+<PageTitle>Job Match Analysis</PageTitle>
+
+<div class="jobmatch-container">
+
+    <div class="jobmatch-card">
+
+        <div class="header">
+
+            <i class="bi bi-briefcase-fill"></i>
+
+            <h1>Job Match Analysis</h1>
+
+            <p>
+                Compare your resume against a job description.
+            </p>
+
+        </div>
+
+        <div class="form-section">
+
+            <label>
+                Job Description
+            </label>
+
+            <InputTextArea class="form-control jd-input"
+                           rows="12"
+                           @bind-Value="JobDescription" />
+
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100"
+                @onclick="AnalyzeJob">
+
+            <i class="bi bi-search"></i>
+            Analyze Match
+
+        </button>
+
+        @if (_result is not null)
+        {
+            <div class="result-section">
+
+                <div class="match-score-card">
+
+                    <div class="match-score">
+                        @_result.MatchScore%
+                    </div>
+
+                    <div>
+                        Match Score
+                    </div>
+
+                </div>
+
+                <div class="section-card">
+
+                    <h4>
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        Matched Skills
+                    </h4>
+
+                    <div class="tag-container">
+
+                        @foreach (var item in _result.MatchedSkills)
+                        {
+                            <span class="skill-tag success">
+                                @item
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="section-card">
+
+                    <h4>
+                        <i class="bi bi-exclamation-circle-fill text-warning"></i>
+                        Missing Skills
+                    </h4>
+
+                    <div class="tag-container">
+
+                        @foreach (var item in _result.MissingSkills)
+                        {
+                            <span class="skill-tag warning">
+                                @item
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="section-card">
+
+                    <h4>
+                        <i class="bi bi-lightbulb-fill text-primary"></i>
+                        Recommendation
+                    </h4>
+
+                    <p>
+                        @_result.Recommendation
+                    </p>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public string ResumeId { get; set; } = "";
+
+    private string JobDescription = "";
+
+    private JobMatchResult? _result;
+
+    private async Task AnalyzeJob()
+    {
+        _result =
+            await Api.MatchJobAsync(
+                ResumeId,
+                JobDescription);
+    }
+}

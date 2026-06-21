@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "src\\ResumeAnalyzer.Api\\ResumeAnalyzer.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\ResumeAnalyzer.Blazor\\ResumeAnalyzer.Blazor.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+.analysis-container[b-whcu4wtvmm] {
+    min-height: 90vh;
+    padding: 2rem;
+    background: linear-gradient( 135deg, #f8fbff, #eef5ff);
+}
+
+.analysis-card[b-whcu4wtvmm] {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,.08);
+}
+
+.analysis-header[b-whcu4wtvmm] {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+    .analysis-header i[b-whcu4wtvmm] {
+        font-size: 3rem;
+        color: #0d6efd;
+    }
+
+.score-card[b-whcu4wtvmm] {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 20px;
+    background: linear-gradient( 135deg, #0d6efd, #4f8cff);
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.score-number[b-whcu4wtvmm] {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+.score-label[b-whcu4wtvmm] {
+    letter-spacing: 3px;
+}
+
+.recommendation-list li[b-whcu4wtvmm] {
+    margin-bottom: .75rem;
+}
+
+.loading-card[b-whcu4wtvmm] {
+    text-align: center;
+    margin-top: 8rem;
+}

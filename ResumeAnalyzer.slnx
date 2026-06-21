@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/docs/" />
+  <Folder Name="/infra/" />
+  <Folder Name="/src/">
+    <Project Path="src/ResumeAnalyzer.AnalysisService/ResumeAnalyzer.AnalysisService.csproj" Id="595914a4-9efb-4baf-a09b-6013c5a8c152" />
+    <Project Path="src/ResumeAnalyzer.Api/ResumeAnalyzer.Api.csproj" Id="82cb935c-8577-40cf-812b-f72276f66024" />
+    <Project Path="src/ResumeAnalyzer.Blazor/ResumeAnalyzer.Blazor.csproj" Id="434368f5-b110-4118-9bb1-a810e8ee30e2" />
+    <Project Path="src/ResumeAnalyzer.Shared/ResumeAnalyzer.Shared.csproj" Id="f9c052fd-5e2e-48ac-bffa-de1a44bdd56e" />
+  </Folder>
+</Solution>
