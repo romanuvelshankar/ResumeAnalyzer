@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ResumeAnalyzer.Blazor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1284432d4d07f487b333b5b3cc52af5ce9af938d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ResumeAnalyzer.Blazor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ResumeAnalyzer.Blazor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
