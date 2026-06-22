@@ -4,6 +4,7 @@
     <File Path=".github/workflows/build-ResumeAnalyzerApi.yml" />
     <File Path=".github/workflows/deploy-ResumeAnalyzerApi.yml" />
     <File Path=".github/workflows/master_azfun-resumeanalyzerapi.yml" />
+    <File Path=".github/workflows/master_resumeanalyzerusingazureai.yml" />
     <File Path="build-ResumeAnalyzerWebApp.yml" />
     <File Path="deploy-ResumeAnalyzerWebApp.yml" />
   </Folder>
