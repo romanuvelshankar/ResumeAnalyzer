@@ -1,67 +1,122 @@
 ﻿namespace ResumeAnalyzer.Api.Services
 {
+    using Azure;
+    using Azure.AI.OpenAI;
+    using Microsoft.Extensions.Configuration;
+    using OpenAI.Chat;
     using ResumeAnalyzer.Api.Interfaces;
     using ResumeAnalyzer.Api.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+    using System.Text.Json;
 
     public class OpenAIService : IOpenAIService
     {
-        public async Task<ResumeAnalysisResult>AnalyzeResumeAsync(string resumeText)
+        private readonly IConfiguration _configuration;
+
+        public OpenAIService(IConfiguration configuration)
         {
-            return new ResumeAnalysisResult
+            _configuration = configuration;
+        }
+
+        private AzureOpenAIClient CreateClient()
+        {
+            var endpoint = _configuration["AzureOpenAIEndpoint"];
+
+            var apiKey = _configuration["AzureOpenAIAPIKey"];
+
+            return new AzureOpenAIClient(new Uri(endpoint!), new AzureKeyCredential(apiKey!));
+        }
+
+        public async Task<ResumeAnalysisResult> AnalyzeResumeAsync(string resumeText)
+        {
+            var deploymentName = _configuration["AzureOpenAIDeploymentName"];
+            var client = CreateClient();
+
+
+            ChatClient chatClient = client.GetChatClient(deploymentName!);
+
+            var prompt = $@"Analyze the following resume.
+
+Return ONLY valid JSON.
+
+{{
+  ""atsScore"": 0,
+  ""summary"": """",
+  ""strengths"": [],
+  ""missingSkills"": [],
+  ""recommendations"": []
+}}
+
+Resume:
+
+{resumeText}
+";
+
+            var completion = await chatClient.CompleteChatAsync(
+                [
+                    new SystemChatMessage(
+                    "You are an ATS resume analyzer."),
+                new UserChatMessage(prompt)
+                ]);
+
+            var json = completion.Value.Content[0].Text;
+
+            json = CleanJson(json);
+
+            return JsonSerializer.Deserialize<ResumeAnalysisResult>(json, new JsonSerializerOptions
             {
-                AtsScore = 84,
-                Summary =
-                    "Strong Azure and .NET profile.",
-
-                Strengths =
-                [
-                    ".NET",
-                "Azure",
-                "Microservices"
-                ],
-
-                MissingSkills =
-                [
-                    "Terraform",
-                "AKS"
-                ],
-
-                Recommendations =
-                [
-                    "Add quantified achievements",
-                "Mention CI/CD experience"
-                ]
-            };
+                PropertyNameCaseInsensitive = true
+            }) ?? new ResumeAnalysisResult();
         }
 
         public async Task<JobMatchResult> MatchJobAsync(string resumeText, string jobDescription)
         {
-            return new JobMatchResult
+            var deploymentName = _configuration["AzureOpenAIDeploymentName"];
+            var client = CreateClient();
+
+            ChatClient chatClient = client.GetChatClient(deploymentName!);
+
+            var prompt = $@"
+Analyze the following resume.
+
+Return ONLY valid JSON.
+
+{{
+  ""atsScore"": 0,
+  ""summary"": """",
+  ""strengths"": [],
+  ""missingSkills"": [],
+  ""recommendations"": []
+}}
+
+Resume:
+
+{resumeText}
+";
+
+            var completion = await chatClient.CompleteChatAsync(
+                [
+                    new SystemChatMessage(
+                    "You are a recruitment expert."),
+                new UserChatMessage(prompt)
+                ]);
+
+            var json =
+                completion.Value.Content[0].Text;
+
+            json = CleanJson(json);
+
+            return JsonSerializer.Deserialize<JobMatchResult>(json, new JsonSerializerOptions
             {
-                MatchScore = 82,
+                PropertyNameCaseInsensitive = true
+            }) ?? new JobMatchResult();
+        }
 
-                MatchedSkills =
-                [
-                    ".NET",
-                "Azure"
-                ],
-
-                MissingSkills =
-                [
-                    "Terraform"
-                ],
-
-                MissingKeywords =
-                [
-                    "AKS"
-                ],
-
-                Recommendation =
-                    "Add Terraform experience."
-            };
+        private static string CleanJson(string json)
+        {
+            return json
+                .Replace("```json", "")
+                .Replace("```", "")
+                .Trim();
         }
     }
 }
