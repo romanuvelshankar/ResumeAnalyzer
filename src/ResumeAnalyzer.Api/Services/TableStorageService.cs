@@ -19,35 +19,48 @@ namespace ResumeAnalyzer.Api.Services
             _tableClient.CreateIfNotExists();
         }
 
+        private static List<string> SplitList(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return [];
+            }
+
+            return value.Split('|', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .ToList();
+        }
+
+        private static string GenerateJobRowKey(JobDashboardEntity job)
+        {
+            var raw = $"{job.Title}-{job.Company}-{job.Source}-{job.Location}";
+            return Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.HashData(
+                    System.Text.Encoding.UTF8.GetBytes(raw)));
+        }
+
         public async Task SaveAnalysisAsync(ResumeAnalysisResult result)
         {
             var entity = new ResumeAnalysisEntity
-                {
-                    PartitionKey = "Resume",
-                    RowKey = result.ResumeId,
+            {
+                PartitionKey = "Resume",
+                RowKey = result.ResumeId,
 
-                    AtsScore = result.AtsScore,
+                AtsScore = result.AtsScore,
 
-                    Summary = result.Summary,
+                Summary = result.Summary,
 
-                    Strengths =
-                        string.Join("|",
-                            result.Strengths),
+                Strengths = string.Join("|", result.Strengths),
 
-                    MissingSkills =
-                        string.Join("|",
-                            result.MissingSkills),
+                MissingSkills = string.Join("|", result.MissingSkills),
 
-                    Recommendations =
-                        string.Join("|",
-                            result.Recommendations)
-                };
+                Recommendations = string.Join("|", result.Recommendations)
+            };
 
-            await _tableClient.UpsertEntityAsync(
-                entity);
+            await _tableClient.UpsertEntityAsync(entity);
         }
 
-        public async Task<ResumeAnalysisResult?>GetAnalysisAsync(string resumeId)
+        public async Task<ResumeAnalysisResult?> GetAnalysisAsync(string resumeId)
         {
             try
             {
@@ -59,24 +72,17 @@ namespace ResumeAnalyzer.Api.Services
                 {
                     ResumeId = resumeId,
 
-                    AtsScore =
-                        entity.AtsScore,
+                    AtsScore = entity.AtsScore,
 
-                    Summary =
-                        entity.Summary,
+                    Summary = entity.Summary,
 
-                    Strengths =
-                        SplitList(entity.Strengths),
+                    Strengths = SplitList(entity.Strengths),
 
-                    MissingSkills =
-                        SplitList(entity.MissingSkills),
+                    MissingSkills = SplitList(entity.MissingSkills),
 
-                    Recommendations =
-                        SplitList(entity.Recommendations),
+                    Recommendations = SplitList(entity.Recommendations),
 
-                    AnalyzedAt =
-                        entity.Timestamp?.UtcDateTime
-                        ?? DateTime.UtcNow
+                    AnalyzedAt = entity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
                 };
             }
             catch
@@ -85,75 +91,51 @@ namespace ResumeAnalyzer.Api.Services
             }
         }
 
-
         public async Task SaveJobMatchAsync(string resumeId, JobMatchResult result)
         {
             var entity = new JobMatchEntity
-                {
-                    PartitionKey = "JobMatch",
+            {
+                PartitionKey = "JobMatch",
 
-                    RowKey = resumeId,
+                RowKey = resumeId,
 
-                    MatchScore =
-                        result.MatchScore,
+                MatchScore = result.MatchScore,
 
-                    MatchedSkills =
-                        string.Join("|",
-                            result.MatchedSkills),
+                MatchedSkills = string.Join("|", result.MatchedSkills),
 
-                    MissingSkills =
-                        string.Join("|",
-                            result.MissingSkills),
+                MissingSkills = string.Join("|", result.MissingSkills),
 
-                    MissingKeywords =
-                        string.Join("|",
-                            result.MissingKeywords),
+                MissingKeywords = string.Join("|", result.MissingKeywords),
 
-                    Recommendation =
-                        result.Recommendation
-                };
+                Recommendation = result.Recommendation
+            };
 
-            await _tableClient.UpsertEntityAsync(
-                entity);
+            await _tableClient.UpsertEntityAsync(entity);
         }
 
-        public async Task<JobMatchResult?>
-            GetJobMatchAsync(
-                string resumeId)
+        public async Task<JobMatchResult?> GetJobMatchAsync(string resumeId)
         {
             try
             {
-                var response =
-                    await _tableClient.GetEntityAsync
-                        <JobMatchEntity>(
-                            "JobMatch",
-                            resumeId);
+                var response = await _tableClient.GetEntityAsync<JobMatchEntity>("JobMatch", resumeId);
 
-                var entity =
-                    response.Value;
+                var entity = response.Value;
 
                 return new JobMatchResult
                 {
                     ResumeId = resumeId,
 
-                    MatchScore =
-                        entity.MatchScore,
+                    MatchScore = entity.MatchScore,
 
-                    MatchedSkills =
-                        SplitList(entity.MatchedSkills),
+                    MatchedSkills = SplitList(entity.MatchedSkills),
 
-                    MissingSkills =
-                        SplitList(entity.MissingSkills),
+                    MissingSkills = SplitList(entity.MissingSkills),
 
-                    MissingKeywords =
-                        SplitList(entity.MissingKeywords),
+                    MissingKeywords = SplitList(entity.MissingKeywords),
 
-                    Recommendation =
-                        entity.Recommendation,
+                    Recommendation = entity.Recommendation,
 
-                    AnalyzedAt =
-                        entity.Timestamp?.UtcDateTime
-                        ?? DateTime.UtcNow
+                    AnalyzedAt = entity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
                 };
             }
             catch
@@ -162,19 +144,37 @@ namespace ResumeAnalyzer.Api.Services
             }
         }
 
-        private static List<string> SplitList(
-            string value)
+        public async Task SaveJobAsync(JobDashboardEntity job)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return [];
-            }
+            job.PartitionKey = "JobDashboard";
 
-            return value
-                .Split('|',
-                    StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .ToList();
+            // IMPORTANT: avoid duplicates
+            job.RowKey = GenerateJobRowKey(job);
+
+            await _tableClient.UpsertEntityAsync(job);
+        }
+
+        public async Task SaveJobsAsync(List<JobDashboardEntity> jobs)
+        {
+            foreach (var job in jobs)
+            {
+                job.PartitionKey = "JobDashboard";
+                job.RowKey = GenerateJobRowKey(job);
+
+                await _tableClient.UpsertEntityAsync(job);
+            }
+        }
+
+        public async Task<List<JobDashboardEntity>> GetJobsDashboardInfoAsync()
+        {
+            var jobs = new List<JobDashboardEntity>();
+
+            await foreach (var job in _tableClient.QueryAsync<JobDashboardEntity>(x => x.PartitionKey == "JobDashboard"))
+                            {
+                                jobs.Add(job);
+                            }
+
+            return jobs;
         }
     }
 }

@@ -9,16 +9,13 @@ namespace ResumeAnalyzer.AnalysisService.Services
         private readonly IAtsScoringService _ats;
         private readonly IKeywordExtractionService _keywords;
 
-        public ResumeAnalysisService(
-            IAtsScoringService ats,
-            IKeywordExtractionService keywords)
+        public ResumeAnalysisService(IAtsScoringService ats,IKeywordExtractionService keywords)
         {
             _ats = ats;
             _keywords = keywords;
         }
 
-        public async Task<ResumeAnalysisResult> AnalyzeAsync(
-            string resumeText)
+        public async Task<ResumeAnalysisResult> AnalyzeAsync(string resumeText)
         {
             var atsScore =
                 await _ats.CalculateAsync(

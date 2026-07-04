@@ -1,7 +1,8 @@
 ﻿namespace ResumeAnalyzer.Blazor.Services
 {
-    using System.Net.Http.Json;
+    using ResumeAnalyzer.Shared.Entities;
     using ResumeAnalyzer.Shared.Models;
+    using System.Net.Http.Json;
 
     public class ResumeApiClient
     {
@@ -17,23 +18,18 @@
             _baseApiUrl = url;
         }
 
-        public async Task<UploadResumeResponse?> UploadResumeAsync(
-            MultipartFormDataContent content)
+        public async Task<UploadResumeResponse?> UploadResumeAsync(MultipartFormDataContent content)
         {
-            var response =
-                await _httpClient.PostAsync(_baseApiUrl + "api/uploadresume", content);
+            var response = await _httpClient.PostAsync(_baseApiUrl + "api/uploadresume", content);
 
             response.EnsureSuccessStatusCode();
 
-            return await response.Content
-                .ReadFromJsonAsync<UploadResumeResponse>();
+            return await response.Content.ReadFromJsonAsync<UploadResumeResponse>();
         }
 
-        public async Task<ResumeAnalysisResult?> AnalyzeResumeAsync(
-            string resumeId)
+        public async Task<ResumeAnalysisResult?> AnalyzeResumeAsync(string resumeId)
         {
-            var response =
-                await _httpClient.PostAsJsonAsync(_baseApiUrl + "api/analyzeresume",
+            var response =await _httpClient.PostAsJsonAsync(_baseApiUrl + "api/analyzeresume",
                     new AnalyzeResumeRequest
                     {
                         ResumeId = resumeId
@@ -41,16 +37,12 @@
 
             response.EnsureSuccessStatusCode();
 
-            return await response.Content
-                .ReadFromJsonAsync<ResumeAnalysisResult>();
+            return await response.Content.ReadFromJsonAsync<ResumeAnalysisResult>();
         }
 
-        public async Task<JobMatchResult?> MatchJobAsync(
-            string resumeId,
-            string jobDescription)
+        public async Task<JobMatchResult?> MatchJobAsync(string resumeId, string jobDescription)
         {
-            var response =
-                await _httpClient.PostAsJsonAsync(_baseApiUrl + "api/matchjob",
+            var response = await _httpClient.PostAsJsonAsync(_baseApiUrl + "api/matchjob",
                     new JobMatchRequest
                     {
                         ResumeId = resumeId,
@@ -59,8 +51,15 @@
 
             response.EnsureSuccessStatusCode();
 
-            return await response.Content
-                .ReadFromJsonAsync<JobMatchResult>();
+            return await response.Content.ReadFromJsonAsync<JobMatchResult>();
+        }
+
+        public async Task<List<JobDashboardEntity>> JobDashboardAsync()
+        {
+            var response = await _httpClient.GetAsync(_baseApiUrl + "");
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<JobDashboardEntity>>();
         }
     }
 }

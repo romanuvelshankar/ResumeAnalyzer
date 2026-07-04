@@ -10,11 +10,9 @@
 
         public BlobStorageService(IConfiguration configuration)
         {
-            var connectionString =
-                configuration["ConnectionString"];
+            var connectionString = configuration["ConnectionString"];
 
-            var containerName =
-                configuration["ContainerName"];
+            var containerName = configuration["ContainerName"];
 
             _container = new BlobContainerClient(
                 connectionString,
@@ -23,31 +21,22 @@
             _container.CreateIfNotExists();
         }
 
-        public async Task<string> UploadAsync(
-            string fileName,
-            Stream fileStream)
+        public async Task<string> UploadAsync(string fileName, Stream fileStream)
         {
-            var blobName =
-                $"{Guid.NewGuid()}-{fileName}";
+            var blobName = $"{Guid.NewGuid()}-{fileName}";
 
-            var blobClient =
-                _container.GetBlobClient(blobName);
+            var blobClient = _container.GetBlobClient(blobName);
 
-            await blobClient.UploadAsync(
-                fileStream,
-                overwrite: true);
+            await blobClient.UploadAsync(fileStream, overwrite: true);
 
             return blobName;
         }
 
-        public async Task<Stream> DownloadAsync(
-            string blobName)
+        public async Task<Stream> DownloadAsync(string blobName)
         {
-            var blobClient =
-                _container.GetBlobClient(blobName);
+            var blobClient = _container.GetBlobClient(blobName);
 
-            var response =
-                await blobClient.DownloadStreamingAsync();
+            var response = await blobClient.DownloadStreamingAsync();
 
             return response.Value.Content;
         }

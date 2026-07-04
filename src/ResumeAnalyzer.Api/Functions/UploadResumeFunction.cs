@@ -16,8 +16,7 @@ public class UploadResumeFunction
     }
 
     [Function("UploadResume")]
-    public async Task<IActionResult> Run(
-    [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
+    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
         var form = await req.ReadFormAsync();
 

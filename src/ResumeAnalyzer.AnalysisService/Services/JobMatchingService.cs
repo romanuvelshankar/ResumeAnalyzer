@@ -26,10 +26,7 @@
                                   .Except(resumeSkills.FoundSkills)
                                   .ToList();
 
-            var score = jdSkills.FoundSkills.Count == 0
-                                                    ? 0
-                                                    : matched.Count * 100 /
-                                                      jdSkills.FoundSkills.Count;
+            var score = jdSkills.FoundSkills.Count == 0 ? 0 : (matched.Count * 100 / jdSkills.FoundSkills.Count);
 
             return new JobMatchResult
             {
@@ -37,8 +34,7 @@
                 MatchedSkills = matched,
                 MissingSkills = missing,
                 MissingKeywords = missing,
-                Recommendation =
-                    $"Add {string.Join(", ", missing)}"
+                Recommendation = $"Add {string.Join(", ", missing)}"
             };
         }
     }
