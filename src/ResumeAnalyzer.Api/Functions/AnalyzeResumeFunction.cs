@@ -27,9 +27,13 @@ public class AnalyzeResumeFunction
     {
         var request = await req.ReadFromJsonAsync<AnalyzeResumeRequest>() ?? throw new InvalidOperationException("Request body is missing.");
 
-        var pdfStream = await _storage.DownloadAsync(request.ResumeId);
+        var blobStream = await _storage.DownloadAsync(request.ResumeId);
+        using var memory = new MemoryStream();
+        await blobStream.CopyToAsync(memory);
 
-        var resumeText = await _pdf.ExtractTextAsync(pdfStream);
+        memory.Position = 0;
+
+        var resumeText = await _pdf.ExtractTextAsync(memory);
 
         var analysis = await _ai.AnalyzeResumeAsync(resumeText);
 
