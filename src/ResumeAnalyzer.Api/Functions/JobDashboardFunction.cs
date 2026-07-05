@@ -17,8 +17,8 @@ public class JobDashboardFunction
         _jobDashboardService = jobDashboardService;
     }
 
-    [Function("JobDashboardFunction")]
-    public async Task<IActionResult> GetJobs([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+    [Function("GetJobDashboard")]
+    public async Task<IActionResult> GetJobs([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
         var jobs = await _jobDashboardService.GetJobsAsync();
         return new OkObjectResult(jobs);

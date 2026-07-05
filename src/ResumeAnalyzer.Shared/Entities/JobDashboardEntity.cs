@@ -11,7 +11,8 @@ namespace ResumeAnalyzer.Shared.Entities
         public string Company { get; set; } = string.Empty;
         public string? Location { get; set; }
         public string? Description { get; set; }
-        public List<string> Tags { get; set; } = [];
+
+        public string TagsSerialized { get; set; } = string.Empty;
         public bool IsRemote { get; set; }
         public string Source { get; set; } = string.Empty;
         public DateTimeOffset? Timestamp { get; set; }

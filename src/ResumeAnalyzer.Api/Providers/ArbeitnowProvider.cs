@@ -28,7 +28,7 @@ namespace ResumeAnalyzer.Api.Providers
                 Company = j.CompanyName,
                 Location = j.Location,
                 Description = j.Description,
-                Tags = j.Tags ?? [],
+                TagsSerialized = string.Join(';', j.Tags),
                 IsRemote = j.Remote,
                 Source = "Arbeitnow"
             }).ToList() ?? [];

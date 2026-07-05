@@ -17,6 +17,9 @@ namespace ResumeAnalyzer.Api.Providers
         public async Task<List<JobDashboardEntity>> GetJobsAsync(CancellationToken cancellationToken = default)
         {
             var json = await _httpClient.GetStringAsync("remote-jobs", cancellationToken);
+
+
+            Console.WriteLine(json);
             var result = JsonConvert.DeserializeObject<RemotiveApiResponse>(json);
 
             return result?.Jobs.Select(j => new JobDashboardEntity
@@ -25,7 +28,7 @@ namespace ResumeAnalyzer.Api.Providers
                 Company = j.CompanyName,
                 Location = j.CandidateRequiredLocation,
                 Description = j.Description,
-                Tags = j.Tags ?? [],
+                TagsSerialized = string.Join(';', j.Tags),
                 IsRemote = true,
                 Source = "Remotive"
             }).ToList() ?? [];

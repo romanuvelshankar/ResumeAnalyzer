@@ -26,6 +26,12 @@ var serviceUri = new Uri("https://stresumeanalyzer.table.core.windows.net/");
 
 var tableClient = new TableClient(serviceUri,"JobDashboard",new DefaultAzureCredential());
 
+builder.Services.AddSingleton(_ =>
+{
+    var connectionString = builder.Configuration["ConnectionString"];
+    return new TableClient(connectionString, "jobsdashboard");
+});
+
 // HttpClient per provider
 builder.Services.AddHttpClient<RemotiveProvider>();
 builder.Services.AddHttpClient<ArbeitnowProvider>();
@@ -40,6 +46,7 @@ builder.Services.AddScoped<IOpenAIService, OpenAIService>();
 builder.Services.AddScoped<IPdfExtractionService, PdfExtractionService>();
 
 builder.Services.AddScoped<IJobDashboardSyncService, JobDashboardSyncService>();
+builder.Services.AddScoped<IJobDashboardService,JobDashboardService>();
 
 builder.Services
     .AddApplicationInsightsTelemetryWorkerService()

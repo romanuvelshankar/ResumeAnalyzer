@@ -1,0 +1,234 @@
+﻿@page "/aboutme"
+
+@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.False" Class="about-page">
+
+    <MudGrid Class="fill-height">
+
+        <!-- LEFT PANEL -->
+        <MudItem xs="12" lg="4">
+
+            <MudPaper Class="glass-card hero-card">
+
+                <MudAvatar Size="Size.Large">
+                    <MudImage Src="/images/profile.jpg" Alt="Profile" @oncontextmenu:preventDefault />
+                </MudAvatar>
+
+
+                <MudText Typo="Typo.h4" Class="mt-3">
+                    Romanuvel Shankar
+                </MudText>
+
+                <MudText Typo="Typo.subtitle1" Color="Color.Primary">
+                    Senior .NET Engineer | Tech Lead & Azure Cloud Engineer | AI-Powered Application Development | C# · Cloud Migration · CI/CD
+                </MudText>
+
+                <MudDivider Class="my-3"/>
+
+                <MudText Class="mb-4">
+                    Passionate software engineer with
+                    <b>@ExperienceYears+ years</b> of experience building
+                    scalable enterprise solutions using .NET, Azure and AI.
+                </MudText>
+
+                <MudGrid Class="stats">
+
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.h5">@ExperienceYears+</MudText>
+                        <MudText Typo="Typo.caption">Years</MudText>
+                    </MudItem>
+
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.h5">20+</MudText>
+                        <MudText Typo="Typo.caption">Projects</MudText>
+                    </MudItem>
+
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.h5">Azure</MudText>
+                        <MudText Typo="Typo.caption">Cloud</MudText>
+                    </MudItem>
+
+                </MudGrid>
+
+                <MudSpacer/>
+
+                <MudStack Direction="Row" Justify="Justify.Center" Spacing="4" Class="mt-4">
+
+                    <MudButton Variant="Variant.Text" StartIcon="@Icons.Custom.Brands.LinkedIn" Href="https://www.linkedin.com/in/romanuvelshankar" Target="_blank">
+                        LinkedIn
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Text" StartIcon="@Icons.Custom.Brands.GitHub" Href="https://github.com/romanuvelshankar" Target="_blank">
+                        GitHub
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Email" Href="mailto:romanuvelshankar@gmail.com">
+                        Email
+                    </MudButton>
+                                        
+                    <MudButton Variant="Variant.Text" StartIcon="@Icons.Custom.Brands.WhatsApp" Href="https://wa.me/+919688631350">
+                        WhatsApp
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Phone" Href="tel:+46734995111">
+                        Call Me
+                    </MudButton>
+                </MudStack>
+
+            </MudPaper>
+
+        </MudItem>
+
+        <!-- RIGHT PANEL -->
+
+        <MudItem xs="12" lg="8">
+
+            <MudGrid Class="right-grid">
+
+                <!-- TECHNOLOGY -->
+
+                <MudItem xs="12">
+
+                    <MudPaper Class="glass-card tech-card">
+
+                        <MudText Typo="Typo.h6">
+                            Technology Stack
+                        </MudText>
+
+                        <MudStack Row Wrap="Wrap.Wrap" Class="mt-2">
+
+                            <MudChip T="string">.NET</MudChip>
+                            <MudChip T="string">Blazor</MudChip>
+                            <MudChip T="string">ASP.NET Core</MudChip>
+                            <MudChip T="string">Azure</MudChip>
+                            <MudChip T="string">Azure Functions</MudChip>
+                            <MudChip T="string">Docker</MudChip>
+                            <MudChip T="string">Redis</MudChip>
+                            <MudChip T="string">SQL Server</MudChip>
+                            <MudChip T="string">OpenAI</MudChip>
+                            <MudChip T="string">GitHub Actions</MudChip>
+
+                        </MudStack>
+
+                    </MudPaper>
+
+                </MudItem>
+
+                <!-- ENTERPRISE -->
+
+                <MudItem xs="12" md="6">
+
+                    <MudPaper Class="glass-card feature-card">
+
+                        <MudIcon Icon="@Icons.Material.Filled.Code"
+                                 Size="Size.Large"
+                                 Color="Color.Primary"/>
+
+                        <MudText Typo="Typo.h6" Class="mt-2">
+                            Enterprise Development
+                        </MudText>
+
+                        <MudText Typo="Typo.body2">
+                            Clean Architecture<br />
+                            REST APIs<br />
+                            Microservices<br />
+                            Blazor<br />
+                            .NET
+                        </MudText>
+
+                    </MudPaper>
+
+                </MudItem>
+
+                <!-- AZURE -->
+
+                <MudItem xs="12" md="6">
+
+                    <MudPaper Class="glass-card feature-card">
+
+                        <MudIcon Icon="@Icons.Material.Filled.Cloud"
+                                 Size="Size.Large"
+                                 Color="Color.Info"/>
+
+                        <MudText Typo="Typo.h6" Class="mt-2">
+                            Azure Cloud
+                        </MudText>
+
+                        <MudText Typo="Typo.body2">
+                            Functions<br />
+                            Logic Apps<br />
+                            Azure Servicebus <br />
+                            
+                            App Services<br />
+                            Storage<br />
+                            DevOps<br />
+                            CI/CD
+                        </MudText>
+
+                    </MudPaper>
+
+                </MudItem>
+
+                <!-- AI -->
+
+                <MudItem xs="12" md="6">
+
+                    <MudPaper Class="glass-card feature-card">
+
+                        <MudIcon Icon="@Icons.Material.Filled.Psychology"
+                                 Size="Size.Large"
+                                 Color="Color.Success"/>
+
+                        <MudText Typo="Typo.h6" Class="mt-2">
+                            Artificial Intelligence
+                        </MudText>
+
+                        <MudText Typo="Typo.body2">
+                            OpenAI<br />
+                            Prompt Engineering
+                        </MudText>
+
+                    </MudPaper>
+
+                </MudItem>
+
+                <!-- CAREER -->
+
+                <MudItem xs="12" md="6">
+
+                    <MudPaper Class="glass-card feature-card">
+
+                        <MudText Typo="Typo.h6">
+                            Career Highlights
+                        </MudText>
+
+                        <MudList T="string" Dense="true">
+
+                            <MudListItem>2013 • Started .NET</MudListItem>
+
+                            <MudListItem>2017 • Enterprise Apps</MudListItem>
+
+                            <MudListItem>2021 • Azure Cloud</MudListItem>
+
+                            <MudListItem>Today • AI Solutions</MudListItem>
+
+                        </MudList>
+
+                    </MudPaper>
+
+                </MudItem>
+
+            </MudGrid>
+
+        </MudItem>
+
+    </MudGrid>
+
+</MudContainer>
+
+@code
+{
+    private int ExperienceYears =>
+        DateTime.Today.Year - 2013;
+}

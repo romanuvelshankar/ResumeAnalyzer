@@ -171,3 +171,6 @@
 /src/ResumeAnalyzer.Blazor/obj/ResumeAnalyzer.Blazor.csproj.nuget.dgspec.json
 /src/ResumeAnalyzer.Blazor/obj/ResumeAnalyzer.Blazor.csproj.nuget.g.props
 /src/ResumeAnalyzer.Blazor/obj/ResumeAnalyzer.Blazor.csproj.nuget.g.targets
+*.gz
+/src/ResumeAnalyzer.Blazor/obj/Debug/net10.0/compressed/xkju9een7s-{0}-aqz4e9trud-aqz4e9trud.gz
+/src/ResumeAnalyzer.Blazor/obj/Debug/net10.0/scopedcss/Components/Layout/MainLayout.razor.rz.scp.css

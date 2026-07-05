@@ -3,6 +3,7 @@
     using ResumeAnalyzer.Shared.Entities;
     using ResumeAnalyzer.Shared.Models;
     using System.Net.Http.Json;
+    using System.Text.Json;
 
     public class ResumeApiClient
     {
@@ -53,13 +54,17 @@
 
             return await response.Content.ReadFromJsonAsync<JobMatchResult>();
         }
-
         public async Task<List<JobDashboardEntity>> JobDashboardAsync()
         {
-            var response = await _httpClient.GetAsync(_baseApiUrl + "");
+            var response = await _httpClient.GetAsync(_baseApiUrl + "api/GetJobDashboard");
 
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<JobDashboardEntity>>();
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+
+            var result = await JsonSerializer.DeserializeAsync<List<JobDashboardEntity>>(stream, new JsonSerializerOptions{ PropertyNameCaseInsensitive = true });
+
+            return result ?? new List<JobDashboardEntity>();
         }
     }
 }

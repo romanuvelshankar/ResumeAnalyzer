@@ -1,0 +1,57 @@
+.dashboard-header[b-e1jt5trv7v] {
+    border-radius: 24px;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white;
+}
+
+    .dashboard-header .mud-chip[b-e1jt5trv7v] {
+        font-weight: 600;
+    }
+
+.search-box[b-e1jt5trv7v] {
+    border-radius: 18px;
+    background: #fafafa;
+}
+
+.job-card[b-e1jt5trv7v] {
+    border-radius: 18px;
+    transition: all .25s ease;
+    overflow: hidden;
+}
+
+    .job-card:hover[b-e1jt5trv7v] {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0,0,0,.18);
+    }
+
+    .job-card .mud-avatar[b-e1jt5trv7v] {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .job-card .mud-chip[b-e1jt5trv7v] {
+        border-radius: 12px;
+    }
+
+.skeleton-card[b-e1jt5trv7v] {
+    border-radius: 18px;
+}
+
+.mud-card-actions[b-e1jt5trv7v] {
+    padding: 16px;
+}
+
+.mud-button[b-e1jt5trv7v] {
+    border-radius: 10px;
+}
+
+.mud-divider[b-e1jt5trv7v] {
+    opacity: .4;
+}
+
+@media (max-width:960px) {
+
+    .dashboard-header[b-e1jt5trv7v] {
+        text-align: center;
+    }
+}

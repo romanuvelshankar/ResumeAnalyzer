@@ -1,132 +1,169 @@
 ﻿@page "/jobs"
-
+@rendermode InteractiveServer
 @using MudBlazor
 @using ResumeAnalyzer.Blazor.Services
-@using ResumeAnalyzer.Shared.Models
 @using ResumeAnalyzer.Shared.Entities
 
 @inject ResumeApiClient JobApi
 
 <PageTitle>Job Dashboard</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.False">
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-6">
 
-    <MudText Typo="Typo.h4" Class="mb-4">
-        Job Dashboard
-    </MudText>
+    <!-- HERO -->
+
+    <MudPaper Class="dashboard-header pa-6 mb-6">
+
+        <MudText Typo="Typo.h3" Class="fw-bold">
+            👋 Find Your Next Opportunity
+        </MudText>
+
+        <MudText Typo="Typo.subtitle1">
+            Discover jobs curated from multiple platforms.
+        </MudText>
+
+        <MudStack Row="true" Class="mt-4">
+
+            <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled">
+                @_jobs.Count Jobs
+            </MudChip>
+
+            <MudChip T="string" Color="Color.Success" Variant="Variant.Filled">
+                Remote Friendly
+            </MudChip>
+
+        </MudStack>
+
+    </MudPaper>
+
+    <!-- SEARCH -->
+
+    <MudPaper Elevation="0" Class="pa-4 mb-6 search-box">
+
+        <MudTextField T="string"
+                      Placeholder="Search jobs..."
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      Variant="Variant.Outlined"
+                      FullWidth="true"
+                      Immediate="true"
+                      @bind-Value="_search" />
+
+    </MudPaper>
 
     @if (_loading)
     {
         <MudGrid Spacing="3">
-            @for (var i = 0; i < 6; i++)
+
+            @for (int i = 0; i < 6; i++)
             {
                 <MudItem xs="12" sm="6" lg="4">
-                    <MudSkeleton Height="340px"
-                                 Width="100%"
-                                 SkeletonType="SkeletonType.Rectangle" />
+
+                    <MudCard Class="pa-5 skeleton-card">
+
+                        <MudSkeleton SkeletonType="SkeletonType.Circle"
+                                     Width="60px"
+                                     Height="60px" />
+
+                        <MudSkeleton Width="80%"
+                                     Height="25px"
+                                     Class="mt-4" />
+
+                        <MudSkeleton Width="50%"
+                                     Height="20px" />
+
+                        <MudSkeleton Width="100%"
+                                     Height="100px"
+                                     Class="mt-4" />
+
+                    </MudCard>
+
                 </MudItem>
             }
+
         </MudGrid>
-    }
-    else if (!string.IsNullOrWhiteSpace(_error))
-    {
-        <MudAlert Severity="Severity.Error">
-            @_error
-        </MudAlert>
-    }
-    else if (_jobs.Count == 0)
-    {
-        <MudAlert Severity="Severity.Info">
-            No jobs found.
-        </MudAlert>
     }
     else
     {
-        <MudGrid Spacing="3">
+        <MudGrid Spacing="4">
 
-            @foreach (var job in _jobs)
+            @foreach (var job in FilteredJobs)
             {
                 <MudItem xs="12" sm="6" lg="4">
 
-                    <MudCard Class="h-100">
+                    <MudCard Class="job-card d-flex flex-column h-100">
 
                         <MudCardHeader>
 
                             <CardHeaderContent>
 
-                                <MudText Typo="Typo.h6">
-                                    @job.Title
-                                </MudText>
+                                <MudStack Row="true" AlignItems="AlignItems.Center">
 
-                                <MudText Typo="Typo.subtitle2"
-                                         Color="Color.Secondary">
-                                    @job.Company
-                                </MudText>
+                                    <MudAvatar Color="Color.Primary" Size="Size.Large">
+                                        @(string.IsNullOrWhiteSpace(job.Company) ? "?" : job.Company[0].ToString())
+                                    </MudAvatar>
+
+                                    <MudStack Class="ms-3">
+
+                                        <MudText Typo="Typo.h6">
+                                            @job.Title
+                                        </MudText>
+
+                                        <MudText Color="Color.Secondary">
+                                            @job.Company
+                                        </MudText>
+
+                                    </MudStack>
+
+                                </MudStack>
 
                             </CardHeaderContent>
 
-                            <CardHeaderActions>
-
-                                @if (job.IsRemote)
-                                {
-                                    <MudChip T="string" Color="Color.Success" Variant="Variant.Filled" Size="Size.Small">
-                                        Remote
-                                    </MudChip>
-                                }
-
-                            </CardHeaderActions>
-
                         </MudCardHeader>
 
-                        <MudCardContent>
+                        <MudCardContent Class="flex-grow-1">
 
-                            @if (!string.IsNullOrWhiteSpace(job.Location))
-                            {
-                                <MudStack Row="true"
-                                          AlignItems="AlignItems.Center"
-                                          Spacing="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center">
 
-                                    <MudIcon Icon="@Icons.Material.Filled.LocationOn"
-                                             Size="Size.Small" />
+                                <MudIcon Icon="@Icons.Material.Filled.LocationOn"
+                                         Color="Color.Error" />
 
-                                    <MudText Typo="Typo.body2">
-                                        @job.Location
-                                    </MudText>
+                                <MudText Color="Color.Secondary">
+                                    @(job.IsRemote ? "Remote" : job.Location)
+                                </MudText>
 
-                                </MudStack>
-                            }
+                            </MudStack>
 
-                            <MudStack Row="true"
-                                      Class="mt-2">
+                            <MudStack Row="true" Class="mt-3">
 
-                                <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined" Size="Size.Small">
+                                <MudChip T="string" Color="Color.Info">
                                     @job.Source
                                 </MudChip>
 
                             </MudStack>
 
-                            <MudDivider Class="my-3" />
+                            <MudDivider Class="my-4"/>
 
-                            <MudText Typo="Typo.body2">
+                            <MudExpansionPanels>
+                                <MudExpansionPanel Text="Job Description">
+                                    @((MarkupString)(job.Description ?? ""))
+                                </MudExpansionPanel>
+                            </MudExpansionPanels>
 
-                                @(string.IsNullOrWhiteSpace(job.Description)
-                                    ? "No description available."
-                                    : job.Description.Length > 220
-                                        ? job.Description[..220] + "..."
-                                        : job.Description)
-
-                            </MudText>
-
-                            @if (job.Tags.Any())
+                            @if (!string.IsNullOrWhiteSpace(job.TagsSerialized))
                             {
                                 <MudStack Row="true"
                                           Wrap="Wrap.Wrap"
                                           Class="mt-4">
 
-                                    @foreach (var tag in job.Tags)
+                                    @foreach(var tag in job.TagsSerialized.Split(';'))
                                     {
-                                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">
+                                        <MudChip T="string" Size="Size.Small"
+                                                 Variant="Variant.Filled"
+                                                 Color="Color.Primary">
+
                                             @tag
+
                                         </MudChip>
                                     }
 
@@ -135,18 +172,9 @@
 
                         </MudCardContent>
 
+                        <MudDivider />
+
                         <MudCardActions>
-
-                            <MudButton Variant="Variant.Filled"
-                                       Color="Color.Primary">
-                                View Details
-                            </MudButton>
-
-                            <MudSpacer />
-
-                            <MudIconButton Icon="@Icons.Material.Filled.BookmarkBorder" />
-
-                            <MudIconButton Icon="@Icons.Material.Filled.Share" />
 
                         </MudCardActions>
 
@@ -160,25 +188,30 @@
 
 </MudContainer>
 
-@code
-{
-    private List<JobDashboardEntity> _jobs = [];
-    private bool _loading = true;
-    private string? _error;
+@code{
+
+    private List<JobDashboardEntity> _jobs = new();
+
+    private bool _loading=true;
+    private string _search="";
+
+    IEnumerable<JobDashboardEntity> FilteredJobs =>
+    _jobs.Where(j =>
+        string.IsNullOrWhiteSpace(_search)
+        || (j.Title?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+        || (j.Company?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+        || (j.Location?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+        || (j.Description?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+        || (j.TagsSerialized?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+    );
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _jobs = await JobApi.JobDashboardAsync();
-        }
-        catch (Exception ex)
-        {
-            _error = ex.Message;
-        }
-        finally
-        {
-            _loading = false;
-        }
+        await Task.Delay(1000);
+
+        _jobs = await JobApi.JobDashboardAsync();
+
+        _loading=false;
     }
+
 }

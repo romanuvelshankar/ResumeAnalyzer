@@ -96,3 +96,31 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.about-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+    .about-shimmer::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -120%;
+        width: 35%;
+        height: 200%;
+        background: linear-gradient( 90deg, transparent, rgba(255,255,255,0.8), transparent );
+        transform: rotate(20deg);
+        animation: shimmer 2.5s ease-in-out infinite;
+    }
+
+@keyframes shimmer {
+    /* Idle for most of the cycle */
+    0%, 70% {
+        left: -120%;
+    }
+    /* Shine sweeps across */
+    100% {
+        left: 140%;
+    }
+}

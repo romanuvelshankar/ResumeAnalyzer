@@ -1,0 +1,57 @@
+﻿.dashboard-header {
+    border-radius: 24px;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white;
+}
+
+    .dashboard-header .mud-chip {
+        font-weight: 600;
+    }
+
+.search-box {
+    border-radius: 18px;
+    background: #fafafa;
+}
+
+.job-card {
+    border-radius: 18px;
+    transition: all .25s ease;
+    overflow: hidden;
+}
+
+    .job-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0,0,0,.18);
+    }
+
+    .job-card .mud-avatar {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .job-card .mud-chip {
+        border-radius: 12px;
+    }
+
+.skeleton-card {
+    border-radius: 18px;
+}
+
+.mud-card-actions {
+    padding: 16px;
+}
+
+.mud-button {
+    border-radius: 10px;
+}
+
+.mud-divider {
+    opacity: .4;
+}
+
+@media (max-width:960px) {
+
+    .dashboard-header {
+        text-align: center;
+    }
+}

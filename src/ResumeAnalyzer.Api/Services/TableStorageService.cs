@@ -9,14 +9,17 @@ namespace ResumeAnalyzer.Api.Services
     public class TableStorageService : ITableStorageService
     {
         private readonly TableClient _tableClient;
+        private readonly TableClient _tableJobDashboardClient;
 
         public TableStorageService(IConfiguration configuration)
         {
             var connectionString = configuration["ConnectionString"];
 
             _tableClient = new TableClient(connectionString, "resumeanalysis");
+            _tableJobDashboardClient = new TableClient(connectionString, "jobsdashboard");
 
             _tableClient.CreateIfNotExists();
+            _tableJobDashboardClient.CreateIfNotExists();
         }
 
         private static List<string> SplitList(string value)
@@ -31,12 +34,41 @@ namespace ResumeAnalyzer.Api.Services
                         .ToList();
         }
 
+        private async Task DeleteAllJobsAsync()
+        {
+            await foreach (var entity in _tableJobDashboardClient.QueryAsync<TableEntity>(
+                e => e.PartitionKey == "JobDashboard"))
+            {
+                await _tableJobDashboardClient.DeleteEntityAsync(
+                    entity.PartitionKey,
+                    entity.RowKey);
+            }
+        }
+
+        private JobDashboardEntity CharacterLimitJobDashboard(JobDashboardEntity job)
+        {
+            foreach (var prop in typeof(JobDashboardEntity).GetProperties())
+            {
+                if (prop.PropertyType != typeof(string) || !prop.CanWrite)
+                    continue;
+
+                var value = (string?)prop.GetValue(job);
+
+                if (value?.Length > 32000)
+                {
+                    prop.SetValue(job, value[..32000]);
+                }
+            }
+            return job;
+        }
+
         private static string GenerateJobRowKey(JobDashboardEntity job)
         {
             var raw = $"{job.Title}-{job.Company}-{job.Source}-{job.Location}";
-            return Convert.ToBase64String(
-                System.Security.Cryptography.SHA256.HashData(
-                    System.Text.Encoding.UTF8.GetBytes(raw)));
+            return raw.Replace("/", "-")
+                      .Replace("\\", "-")
+                      .Replace("#", "-")
+                      .Replace("?", "-");
         }
 
         public async Task SaveAnalysisAsync(ResumeAnalysisResult result)
@@ -151,17 +183,21 @@ namespace ResumeAnalyzer.Api.Services
             // IMPORTANT: avoid duplicates
             job.RowKey = GenerateJobRowKey(job);
 
-            await _tableClient.UpsertEntityAsync(job);
+            await _tableJobDashboardClient.UpsertEntityAsync(job);
         }
 
         public async Task SaveJobsAsync(List<JobDashboardEntity> jobs)
         {
+            await DeleteAllJobsAsync();
+
             foreach (var job in jobs)
             {
                 job.PartitionKey = "JobDashboard";
                 job.RowKey = GenerateJobRowKey(job);
 
-                await _tableClient.UpsertEntityAsync(job);
+                CharacterLimitJobDashboard(job);
+
+                await _tableJobDashboardClient.UpsertEntityAsync(job);
             }
         }
 
@@ -169,7 +205,7 @@ namespace ResumeAnalyzer.Api.Services
         {
             var jobs = new List<JobDashboardEntity>();
 
-            await foreach (var job in _tableClient.QueryAsync<JobDashboardEntity>(x => x.PartitionKey == "JobDashboard"))
+            await foreach (var job in _tableJobDashboardClient.QueryAsync<JobDashboardEntity>(x => x.PartitionKey == "JobDashboard"))
                             {
                                 jobs.Add(job);
                             }

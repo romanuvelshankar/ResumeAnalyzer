@@ -87,3 +87,13 @@ h1:focus {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
 }
+
+.mud-appbar {
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    color: white;
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+}
